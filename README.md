@@ -19,10 +19,26 @@ $ make install
 ## Container images
 - x86_64, aarch64
 
-## Building image with Docker buildx
+## Building image with Docker buildx, pushing to dockerhub
 
 ```bash
 $ docker login
 $ docker buildx create --use
 $ docker buildx build --platform linux/amd64,linux/arm64 --push -t cjlove2024/multiarchtest:latest .
+```
+
+## Building image with Docker buildx, pushing to private registry
+
+- Create /etc/buildkitd.toml with entry for private registry and path to its root CA:
+
+```
+# /etc/buildkitd.toml
+debug = true
+[registry."fir.love.io:3005"]
+  ca=["/etc/docker/certs.d/fir.love.io:3005/ca.crt"]
+```
+
+```bash
+$ docker buildx create --use --bootstrap --name mybuilder --driver docker-container --config /etc/buildkitd.toml
+$ docker buildx build --platform linux/amd64,linux/arm64 --push -t fir.love.io:3005/multiarch:latest .
 ```
