@@ -42,3 +42,10 @@ debug = true
 $ docker buildx create --use --bootstrap --name mybuilder --driver docker-container --config /etc/buildkitd.toml
 $ docker buildx build --platform linux/amd64,linux/arm64 --push -t fir.love.io:3005/multiarch:latest .
 ```
+
+## Deploying to multi-architecture K3S cluster
+The number of replicas in the deployment ensures pods scheduled on all nodes in a K3S cluster consisting of x86_64 and aarch64 nodes:
+
+```bash
+$ kubectl apply -f multiarch.yaml
+```
