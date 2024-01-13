@@ -6,6 +6,36 @@ resources:
   source:
     uri: http://fir.love.io:3000/ChrisLove/cpp-multiarch
 
+- name: multiarch-docker-image
+  type: registry-image
+  icon: docker
+  source:
+    repository: fir.love.io:3005/amd64/((image-name))
+    tag: latest
+    ca_certs:
+    - | 
+      -----BEGIN CERTIFICATE-----
+      MIIDbTCCAlWgAwIBAgIUJ0i2AZFMtBFU5dEFGEehs/jGYtIwDQYJKoZIhvcNAQEL
+      BQAwRjELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRIwEAYDVQQHDAlTYW4gRGll
+      Z28xFjAUBgNVBAoMDUNocmlzIExvdmUgQ0EwHhcNMjExMjIyMjMxNjE3WhcNMjQw
+      OTE2MjMxNjE3WjBGMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExEjAQBgNVBAcM
+      CVNhbiBEaWVnbzEWMBQGA1UECgwNQ2hyaXMgTG92ZSBDQTCCASIwDQYJKoZIhvcN
+      AQEBBQADggEPADCCAQoCggEBALBMuKCMwvlhoQIdkdHkPi5tBh5TGBdf7eGLX1WI
+      kbmeZuoEMtMtPKBH+MBcJW/HMV4qJzZOGvn0oFosoz+6ui0ubLAl8BNpTaJO+8iE
+      8ofIrbTu8I/2ad3CwXE6VmH2JvTgiDIPABZBCMrMM66Lrfk4JAMOxT6ydDw4fZR4
+      tLr7QqJ6CuN9mBYSl25VwnNCWjHTO3+jeRBShdmrqjj2jbI6ClLFDwjJYTWLOItv
+      ap97zznIqPKxGOialZWizQUQul7RuzOFHiT4MdTRfMI6Au5iASuH8X3cFgZ1f+DB
+      VAGlyRwSd4EqhOezXFQ3qYBzjCSQlcMz7Q2rFN9gMGyU3tECAwEAAaNTMFEwHQYD
+      VR0OBBYEFE67dsm6YWBG3eyAGbRghzD3I4nlMB8GA1UdIwQYMBaAFE67dsm6YWBG
+      3eyAGbRghzD3I4nlMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB
+      AJlOBx6HFfF7Mkx8zkSqO+nf6ZBkWZXM4RTTRVGVF3Pjba84zt4OsiPg2HF9cO9w
+      uohQ9NzeZNHo086hNVKeNbRHPeUT71X/IMIriVqpDXmoKNiiL/s9vvz4ur3/STKi
+      1CwRXRPli5NJH2xZSZBxZwTASZdtke+5XkKs7a01JR/9ljZGqjm0hJtOmyJzfFXA
+      3wkCBBx1dfxHFF9X3OivY43wymqLHj+WxUyD95pjLX0pLpJ888dKmitpDlYj/GdK
+      eeClu9EEfL4rV8IBN35CtLFMRLxV6iKnh7YdBSaAp7W+Nu7cK5cN4v5PbHxZN6Gf
+      d97BZDzF58ZNGtguiAqCul4=
+      -----END CERTIFICATE-----
+
 jobs:
 - name: set-pipeline
   public: true
@@ -24,6 +54,33 @@ jobs:
   - in_parallel:
     - task: build
       file: cpp-multiarch-git/ci/build.yml
+
+- name: build-and-push-multiarch-image
+  plan:
+  - get: cpp-multiarch-git
+    passed: [ build-current ]
+    trigger: true
+  - task: build-image-task
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: concourse/oci-build-task
+      inputs:
+      - name: build-current
+      outputs:
+      - name: image
+      params:
+        CONTEXT: cpp-multiarch-git/stage
+        IMAGE_PLATFORM: linux/amd64,linux/arm64
+        OUTPUT_OCI: true
+      run:
+        path: build
+  - put: multiarch-docker-image
+    params:
+      image: image/image
 
 
         

@@ -85,15 +85,15 @@ do
     # Run CMake for the specified architecture
     case $ARCH in
     aarch64)
-        cmake -DCMAKE_TOOLCHAIN_FILE="$PARAM_TOOLCHAIN" "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
+        cmake -DCMAKE_TOOLCHAIN_FILE="$PARAM_TOOLCHAIN" $PARAM_CMAKE -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
         ;;
     *)
         # Handle possible override for native compiler
         if [ -n "$PARAM_CC" ] || [ -n "$PARAM_CXX" ];
         then
-            CC=$PARAM_CC CXX=$PARAM_CXX cmake "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
+            CC=$PARAM_CC CXX=$PARAM_CXX cmake $PARAM_CMAKE -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
         else
-            cmake "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
+            cmake $PARAM_CMAKE -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
         fi
         ;;
     esac
