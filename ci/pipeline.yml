@@ -1,0 +1,29 @@
+---
+resources:
+- name: cpp-multiarch-git
+  type: git
+  icon: github
+  source:
+    uri: http://fir.love.io:3000/ChrisLove/cpp-multiarch
+
+jobs:
+- name: set-pipeline
+  public: true
+  plan:
+  - get: cpp-multiarch-git
+    trigger: true
+  - set_pipeline: cpp-multiarch
+    file: cpp-multiarch-git/ci/pipeline.yml
+# Build using current g++ and aarch-linux-gnu-g++
+- name: build-current
+  public: true
+  plan:
+  - get: cpp-multiarch-git
+    passed: [ set-pipeline ]
+    trigger: true
+  - in_parallel:
+    - task: build
+      file: cpp-multiarch-git/ci/build.yml
+
+
+        

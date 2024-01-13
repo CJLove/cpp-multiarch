@@ -1,0 +1,12 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: fir.love.io:3005/amd64/cross-gcc1321 }
+
+inputs:
+- name: cpp-multiarch-git
+      
+run:
+  path: ./cpp-multiarch-git/ci/build.sh
+  args: [ "--archlist=x86_64,aarch64", "--toolchain=../ArmLinux.cmake" ]   
