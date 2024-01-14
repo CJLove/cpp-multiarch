@@ -6,6 +6,6 @@ WORKDIR /cpp-app
 
 COPY bin/$TARGETPLATFORM/cpp-app .
 
-COPY config .
+COPY config/cpp-app.yaml ./config/
 
-CMD ./cpp-app -f cpp-app.yaml 
+CMD ./cpp-app -f ./config/cpp-app.yaml 
