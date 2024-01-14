@@ -6,6 +6,9 @@ image_resource:
 
 inputs:
 - name: cpp-multiarch-git
+
+outputs:
+- name: cpp-multiarch-git
       
 run:
   path: ./cpp-multiarch-git/ci/build.sh

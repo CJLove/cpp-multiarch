@@ -37,30 +37,18 @@ resources:
       -----END CERTIFICATE-----
 
 jobs:
-- name: set-pipeline
+- name: build-and-publish
   public: true
   plan:
   - get: cpp-multiarch-git
     trigger: true
   - set_pipeline: cpp-multiarch
     file: cpp-multiarch-git/ci/pipeline.yml
-# Build using current g++ and aarch-linux-gnu-g++
-- name: build-current
-  public: true
-  plan:
-  - get: cpp-multiarch-git
-    passed: [ set-pipeline ]
-    trigger: true
-  - in_parallel:
-    - task: build
-      file: cpp-multiarch-git/ci/build.yml
+  - task: build-app
+    file: cpp-multiarch-git/ci/build.yml
 
-- name: build-and-push-multiarch-image
-  plan:
-  - get: cpp-multiarch-git
-    passed: [ build-current ]
-    trigger: true
-  - task: build-image-task
+  - task: build-image
+    #passed: [ build-app ]
     privileged: true
     config:
       platform: linux
@@ -69,7 +57,7 @@ jobs:
         source:
           repository: concourse/oci-build-task
       inputs:
-      - name: build-current
+      - name: cpp-multiarch-git
       outputs:
       - name: image
       params:
