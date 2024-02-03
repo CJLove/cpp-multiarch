@@ -1,0 +1,61 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  build_linux:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    # Use container with docker installed
+    container: 
+      image: catthehacker/ubuntu:act-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: cd ${{ gitea.workspace }}
+      - name: Check /etc/ssl/certs
+        run: ls /etc/ssl/certs
+      - name: Build
+        uses: https://github.com/addnab/docker-run-action@v3
+        with:
+          image: fir.love.io:3005/amd64/multiarch-gcc1321:latest
+          options: --volumes-from=${{ env.JOB_CONTAINER_NAME }}
+          run: |
+            g++ --version
+            aarch64-linux-gnu-g++ --version
+            cmake3 --version
+            cd ${{ gitea.workspace }}
+
+            mkdir -p build_x86_64 && cd build_x86_64
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. ..
+            make install
+            cd ..
+
+            mkdir -p build_aarch64 && cd build_aarch64
+            cmake -DCMAKE_TOOLCHAIN_FILE=../ArmLinux.cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. ..
+            make install
+            cd ..
+
+      - name: Docker cleanup
+        run: docker rm $(docker ps -l --format '{{.ID}}')
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          config-inline: |
+            debug = true
+            [registry."fir.love.io:3005"]
+            ca=["/etc/certs/ca.crt"]      
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./stage
+          file: ./stage/Dockerfile
+          push: true
+          tags: fir.love.io:3005/git-multiarch:latest, fir.love.io:3005/git-multiarch:${{ github.run_number }}
+          platforms: linux/amd64,linux/aarch64

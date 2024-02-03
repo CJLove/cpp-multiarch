@@ -1,33 +1,30 @@
 ---
-apiVersion: v1
-kind: List
-items:
-  - apiVersion: apps/v1
-    kind: Deployment
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: multiarch
+spec:
+  selector:
+    matchLabels:
+      app: multiarch # has to match .spec.template.metadata.labels
+  serviceName: none
+  replicas: 2 # by default is 1
+  minReadySeconds: 10 # by default is 0
+  template:
     metadata:
-      name: multiarch
       labels:
-        app: multiarch
+        app: multiarch # has to match .spec.selector.matchLabels
     spec:
-      replicas: 5
-      selector:
-        matchLabels:
-          app: multiarch
-      strategy:
-        type: RollingUpdate
-        rollingUpdate:
-          maxUnavailable: 50%
-          maxSurge: 1
-      template:
-        metadata:
-          labels:
-            app: multiarch
-          annotations:
-            realtime: "true"
-            rt_runtime_us: "50000"
-        spec:
-          containers:
-          - name: multiarch
-            image: fir.love.io:3005/multiarch:latest
-            imagePullPolicy: Always
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: multiarch
+        image: fir.love.io:3005/multiarch:latest
+        ports:
+        - name: metrics
+          containerPort: 6001
+      - name: sidecar
+        image: fir.love.io:3005/multiarch:latest
+        ports:
+        - name: metrics
+          containerPort: 6001
 
