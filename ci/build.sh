@@ -52,7 +52,7 @@ while test $# -gt 0; do
     cmake=*)
         PARAM_CMAKE=$(echo "$param"|cut -f2- -d'=')
         ;;
-    concourse=*)
+    concourse*)
         PARAM_CONCOURSE=1
         ;;
     help|h|?|-?)
