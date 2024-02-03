@@ -9,6 +9,7 @@ $(basename "$0") options
     [--cxx=<path/to/cxx>]    - path for CXX environment variable for native builds
     [--cc=<path/to/cc>]      - path for CC env variable for native builds
     [--cmake=<options>]      - option string to pass to CMake
+    [--concourse]            - building in Concourse
 EOT
     return 0    
 }
@@ -18,6 +19,7 @@ PARAM_TOOLCHAIN=
 PARAM_CC=
 PARAM_CXX=
 PARAM_CMAKE=
+PARAM_CONCOURSE=
 
 while test $# -gt 0; do
     param="$1"
@@ -50,6 +52,9 @@ while test $# -gt 0; do
     cmake=*)
         PARAM_CMAKE=$(echo "$param"|cut -f2- -d'=')
         ;;
+    concourse=*)
+        PARAM_CONCOURSE=1
+        ;;
     help|h|?|-?)
         ShowUsage
         exit 0
@@ -68,10 +73,13 @@ echo "PARAM_CC=$PARAM_CC"
 echo "PARAM_CXX=$PARAM_CXX"
 echo "PARAM_CMAKE=$PARAM_CMAKE"
 
-[ ! -d ./cpp-multiarch-git ] && { echo "ERROR: repo not cloned!"; exit 1; }
+# If running in a Concourse pipeline then validate the repo was cloned
+if [ -n "$PARAM_CONCOURSE" ]; then
+    [ ! -d ./cpp-multiarch-git ] && { echo "ERROR: repo not cloned!"; exit 1; }
 
-# Change to the base directory of the repo
-cd cpp-multiarch-git || exit 1
+    # Change to the base directory of the repo
+    cd cpp-multiarch-git || exit 1
+fi
 
 BASEDIR=$PWD
 
