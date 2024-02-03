@@ -33,8 +33,6 @@ jobs:
 
             ./ci/build.sh --archlist=x86_64,aarch64 --toolchain=./ArmLinux.cmake
 
-      # - name: Docker cleanup
-      #   run: docker rm $(docker ps -l --format '{{.ID}}')
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
