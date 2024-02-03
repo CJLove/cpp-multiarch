@@ -24,7 +24,7 @@ jobs:
         uses: https://github.com/addnab/docker-run-action@v3
         with:
           image: fir.love.io:3005/amd64/multiarch-gcc1321:latest
-          options: --volumes-from=${{ env.JOB_CONTAINER_NAME }}
+          options: --rm --volumes-from=${{ env.JOB_CONTAINER_NAME }}
           run: |
             g++ --version
             aarch64-linux-gnu-g++ --version
@@ -33,8 +33,8 @@ jobs:
 
             ./ci/build.sh --archlist=x86_64,aarch64 --toolchain=./ArmLinux.cmake
 
-      - name: Docker cleanup
-        run: docker rm $(docker ps -l --format '{{.ID}}')
+      # - name: Docker cleanup
+      #   run: docker rm $(docker ps -l --format '{{.ID}}')
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
