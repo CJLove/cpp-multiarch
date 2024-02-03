@@ -31,15 +31,17 @@ jobs:
             cmake3 --version
             cd ${{ gitea.workspace }}
 
-            mkdir -p build_x86_64 && cd build_x86_64
-            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. ..
-            make install
-            cd ..
+            ./ci/build.sh --archlist=x86_64,aarch64--toolchain=./ArmLinux.cmake"
 
-            mkdir -p build_aarch64 && cd build_aarch64
-            cmake -DCMAKE_TOOLCHAIN_FILE=../ArmLinux.cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. ..
-            make install
-            cd ..
+            # mkdir -p build_x86_64 && cd build_x86_64
+            # cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. ..
+            # make install
+            # cd ..
+
+            # mkdir -p build_aarch64 && cd build_aarch64
+            # cmake -DCMAKE_TOOLCHAIN_FILE=../ArmLinux.cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. ..
+            # make install
+            # cd ..
 
       - name: Docker cleanup
         run: docker rm $(docker ps -l --format '{{.ID}}')
