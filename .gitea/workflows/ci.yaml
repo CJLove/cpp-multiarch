@@ -11,6 +11,8 @@ jobs:
     # Use container with docker installed
     container: 
       image: catthehacker/ubuntu:act-latest
+      volumes:
+        - /etc/certs:/etc/certs
     steps:
       - name: Checkout
         uses: actions/checkout@v3
