@@ -1,6 +1,6 @@
 name: ci
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build_linux:
@@ -31,7 +31,7 @@ jobs:
             cmake3 --version
             cd ${{ gitea.workspace }}
 
-            ./ci/build.sh --archlist=x86_64,aarch64 --toolchain=./ArmLinux.cmake
+            ./build.sh --archlist=x86_64,aarch64 --toolchain=./ArmLinux.cmake
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -50,5 +50,5 @@ jobs:
           context: ./stage
           file: ./stage/Dockerfile
           push: true
-          tags: fir.love.io:3005/git-multiarch:latest, fir.love.io:3005/git-multiarch:${{ github.run_number }}
+          tags: fir.love.io:3005/cpp-multiarch:latest, fir.love.io:3005/cpp-multiarch:${{ github.run_number }}
           platforms: linux/amd64,linux/aarch64

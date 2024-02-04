@@ -49,3 +49,8 @@ The number of replicas in the deployment ensures pods scheduled on all nodes in 
 ```bash
 $ kubectl apply -f multiarch.yaml
 ```
+
+## CI/CD
+
+- `ci` directory has Concourse pipeline (retired) which built the app and image for `x86_64` and `aarch64` and pushes to a private registry
+- `.gitea/workflows/ci.yaml` has Gitea action workflow which builds the app and image for `x86_64` and `aarch64` and pushes to a private registry

@@ -10,7 +10,7 @@ resources:
   type: registry-image
   icon: docker
   source:
-    repository: fir.love.io:3005/amd64/multiarch
+    repository: fir.love.io:3005/amd64/cpp-multiarch
     tag: latest
     ca_certs:
     - | 

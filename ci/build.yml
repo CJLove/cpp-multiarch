@@ -11,5 +11,5 @@ outputs:
 - name: cpp-multiarch-git
       
 run:
-  path: ./cpp-multiarch-git/ci/build.sh
+  path: ./cpp-multiarch-git/build.sh
   args: [ "--concourse", "--archlist=x86_64,aarch64", "--toolchain=../ArmLinux.cmake" ]   

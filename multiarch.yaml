@@ -18,7 +18,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: multiarch
-        image: fir.love.io:3005/multiarch:latest
+        image: fir.love.io:3005/cpp-multiarch:latest
         ports:
         - name: metrics
           containerPort: 6001
