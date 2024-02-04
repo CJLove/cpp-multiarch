@@ -52,11 +52,11 @@ jobs:
           push: true
           tags: fir.love.io:3005/cpp-multiarch:latest, fir.love.io:3005/cpp-multiarch:${{ github.run_number }}
           platforms: linux/amd64,linux/aarch64
-      - name: delete multiarch deployment
-        uses: steebchen/kubectl@v2.1.1
-        with:
-          config: ${{ secrets.KUBE_CONFIG_DATA }}
-          command: delete -f multiarch.yaml
+      # - name: delete multiarch deployment
+      #   uses: steebchen/kubectl@v2.1.1
+      #   with:
+      #     config: ${{ secrets.KUBE_CONFIG_DATA }}
+      #     command: delete -f multiarch.yaml
       - name: apply multiarch deployment
         uses: steebchen/kubectl@v2.1.1
         with:
