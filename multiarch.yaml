@@ -22,9 +22,5 @@ spec:
         ports:
         - name: metrics
           containerPort: 6001
-      - name: sidecar
-        image: fir.love.io:3005/multiarch:latest
-        ports:
-        - name: metrics
-          containerPort: 6001
+
 
