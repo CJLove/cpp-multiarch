@@ -57,8 +57,30 @@ jobs:
       #   with:
       #     config: ${{ secrets.KUBE_CONFIG_DATA }}
       #     command: delete -f multiarch.yaml
-      - name: apply multiarch deployment
-        uses: steebchen/kubectl@v2.1.1
+      # - name: apply multiarch deployment
+      #   uses: steebchen/kubectl@v2.1.1
+      #   with:
+      #     config: ${{ secrets.KUBE_CONFIG_DATA }}
+      #     command: apply -f multiarch.yaml
+
+  results:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: build_linux
+    steps:
+      - name: Report failure
+        if: failure()
+        uses: tsickert/discord-webhook@v5.4.0
         with:
-          config: ${{ secrets.KUBE_CONFIG_DATA }}
-          command: apply -f multiarch.yaml
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          username: Gitea
+          avatar-url: https://about.gitea.com/gitea-text.svg
+          content: "Repo ${{ gitea.repository }} branch ${{ gitea.ref }} build :x:"
+      - name: Report success
+        if: success()
+        uses: tsickert/discord-webhook@v5.4.0
+        with:
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          username: Gitea
+          avatar-url: https://about.gitea.com/gitea-text.svg
+          content: "Repo ${{ gitea.repository }} branch ${{ gitea.ref }} build :white_check_mark:"
