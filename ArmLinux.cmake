@@ -7,7 +7,7 @@ set(CMAKE_C_COMPILER   aarch64-linux-gnu-gcc)
 set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
 
 # where is the target environment located
-set(CMAKE_FIND_ROOT_PATH  /usr/aarch64-linux-gnu/ /home/love/aarch64)
+set(CMAKE_FIND_ROOT_PATH  /usr/aarch64-linux-gnu/ /home/aarch64)
 
 # adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment
