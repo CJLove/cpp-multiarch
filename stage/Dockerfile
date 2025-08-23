@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:41
+FROM registry.fedoraproject.org/fedora-minimal:42
 
 ARG TARGETPLATFORM
 

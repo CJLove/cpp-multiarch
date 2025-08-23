@@ -23,7 +23,7 @@ jobs:
       - name: Build
         uses: https://github.com/addnab/docker-run-action@v3
         with:
-          image: fir.love.io:3005/amd64/multiarch-gcc1421:latest
+          image: fir.love.io:3005/amd64/multiarch-gcc1511:latest
           options: --rm --volumes-from=${{ env.JOB_CONTAINER_NAME }}
           run: |
             g++ --version
