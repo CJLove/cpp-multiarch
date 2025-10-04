@@ -9,6 +9,7 @@ $(basename "$0") options
     [--cxx=<path/to/cxx>]    - path for CXX environment variable for native builds
     [--cc=<path/to/cc>]      - path for CC env variable for native builds
     [--cmake=<options>]      - option string to pass to CMake
+    [--vcpkg]                - build with vcpkg
     [--concourse]            - building in Concourse
 EOT
     return 0    
@@ -20,6 +21,7 @@ PARAM_CC=
 PARAM_CXX=
 PARAM_CMAKE=
 PARAM_CONCOURSE=
+PARAM_VCPKG=
 
 while test $# -gt 0; do
     param="$1"
@@ -51,6 +53,9 @@ while test $# -gt 0; do
         ;;
     cmake=*)
         PARAM_CMAKE=$(echo "$param"|cut -f2- -d'=')
+        ;;
+    vcpkg*)
+        PARAM_VCPKG=1
         ;;
     concourse*)
         PARAM_CONCOURSE=1
@@ -93,17 +98,20 @@ do
     # Run CMake for the specified architecture
     case $ARCH in
     aarch64)
-        cmake -DCMAKE_TOOLCHAIN_FILE="$PARAM_TOOLCHAIN" "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
+        cmake -DVCPKG_OVERLAY_TRIPLETS=/opt/toolchains/triplets -DVCPKG_TARGET_TRIPLET="arm64-linux-gcc-15-1" -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/opt/toolchains/arm64/arm64-linux-gcc-15-1-toolchain.cmake -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake $PARAM_CMAKE -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
         ;;
-    *)
-        # Handle possible override for native compiler
-        if [ -n "$PARAM_CC" ] || [ -n "$PARAM_CXX" ];
-        then
-            CC=$PARAM_CC CXX=$PARAM_CXX cmake "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
-        else
-            cmake "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
-        fi
+    x86_64)
+        cmake -DVCPKG_OVERLAY_TRIPLETS=/opt/toolchains/triplets -DVCPKG_TARGET_TRIPLET="x64-linux-gcc-15-2" -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/opt/toolchains/x64/x86_64-linux-gcc15-2-toolchain.cmake -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake $PARAM_CMAKE -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
         ;;
+    # *)
+    #     # Handle possible override for native compiler
+    #     if [ -n "$PARAM_CC" ] || [ -n "$PARAM_CXX" ];
+    #     then
+    #         CC=$PARAM_CC CXX=$PARAM_CXX cmake "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
+    #     else
+    #         cmake "$PARAM_CMAKE" -DCMAKE_INSTALL_PREFIX="$PWD"/.. ..
+    #     fi
+    #     ;;
     esac
     ret=$?
     [ $ret -ne 0 ] && exit $ret
