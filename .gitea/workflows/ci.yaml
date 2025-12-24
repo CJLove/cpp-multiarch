@@ -10,7 +10,8 @@ jobs:
         shell: bash
     # Use container with docker installed
     container: 
-      image: catthehacker/ubuntu:act-latest
+      #image: catthehacker/ubuntu:act-latest
+      image: ghcr.io/catthehacker/ubuntu:act-latest
       volumes:
         # Need to pass /etc/certs through to the custom container
         - /etc/certs:/etc/certs
