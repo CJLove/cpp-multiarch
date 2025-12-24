@@ -10,7 +10,6 @@ jobs:
         shell: bash
     # Use container with docker installed
     container: 
-      #image: catthehacker/ubuntu:act-latest
       image: ghcr.io/catthehacker/ubuntu:act-latest
       volumes:
         # Need to pass /etc/certs through to the custom container
@@ -31,7 +30,6 @@ jobs:
             aarch64-linux-gnu-g++ --version
             cmake3 --version
             cd ${{ gitea.workspace }}
-
             ./build.sh --archlist=x86_64,aarch64 
 
       - name: Set up QEMU
