@@ -22,7 +22,7 @@ jobs:
       - name: Check /etc/certs
         run: ls /etc/certs
       - name: Build
-        uses: https://github.com/addnab/docker-run-action@v3
+        uses: https://github.com/maus007/docker-run-action-fork@v1
         with:
           image: fir.love.io:3005/amd64/cross-gcc1511:latest
           options: --rm --volumes-from=${{ env.JOB_CONTAINER_NAME }} --pull=always -v /home/vcpkg:/home/vcpkg
