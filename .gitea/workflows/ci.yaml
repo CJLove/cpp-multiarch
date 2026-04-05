@@ -62,7 +62,7 @@ jobs:
           context: ./stage
           file: ./stage/Dockerfile
           push: true
-          tags: fir.love.io:30443/cpp-multiarch:latest, fir.love.io:30443/cpp-multiarch:${{ github.run_number }}
+          tags: fir.love.io:30443/dev/cpp-multiarch:latest, fir.love.io:30443/dev/cpp-multiarch:${{ github.run_number }}
           platforms: linux/amd64,linux/aarch64
 
   results:
