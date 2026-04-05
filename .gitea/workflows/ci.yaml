@@ -29,6 +29,7 @@ jobs:
       - name: Build
         uses: https://github.com/maus007/docker-run-action-fork@v1
         with:
+          registry: fir.love.io:30443
           image: fir.love.io:30443/dev/amd64/cross-gcc1511:latest
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
