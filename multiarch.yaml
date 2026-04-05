@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: multiarch # has to match .spec.template.metadata.labels
   serviceName: none
-  replicas: 2 # by default is 1
+  replicas: 4 # by default is 1
   minReadySeconds: 10 # by default is 0
   template:
     metadata:
@@ -19,9 +19,10 @@ spec:
       containers:
       - name: multiarch
         image: fir.love.io:30443/dev/cpp-multiarch:latest
-        imagePullPolicy: always
+        imagePullPolicy: Always
         ports:
         - name: metrics
           containerPort: 6001
-
+      imagePullSecrets:
+      - name: regcred
 
